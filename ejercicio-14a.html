@@ -15,69 +15,67 @@
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script>
    $( document ).ready(function() {
-    var pXini;
-    var provX;
-    var right = true;
-    var o0;
-    var op;
-    var of;
-    var pYini;
-    var provY;
-    var grow = true;
-    var h0;
-    var hp;
-    var hf;
-    $( 'img' ).css('cursor','crosshair');
-    $( 'img' ).on('mouseenter', function( event ) {
-     pXini = event.pageX;
+    var pXini; //Posición de referencia en el eje X
+    var provX; //Valor provisional 
+    var right = true; //Determina sentido de desplazamiento en el eje X
+    var o0; //Opacidad original de la imagen
+    var op; //Opacidad en el punto de referencia
+    var of; //Opacidad actual
+    var pYini; //Posición de referencia en el eje Y
+    var provY; //Valor provisional
+    var grow = true; //Determina sentido de desplazamiento en el eje Y
+    var h0; //Altura original de la imagen
+    var hp; //Altura en el punto de referencia
+    var hf; //Altura actual
+    function escalon(act,minimo,maximo) {
+     if(act>maximo) { //Si el valor act es mayor que el máximo del intervalo, 
+      return maximo;  //devuelve el máximo
+     }
+     else if(act<minimo) { //Si el valor act es menor que el mínimo del intervalo, 
+      return minimo;       //devuelve el mínimo
+     }
+     else {
+      return act;
+     }
+    }
+    $( 'img' ).css('cursor','crosshair'); //Cambia el cursor para que sea una cruz sobre las imágenes
+    $( 'img' ).on('mouseenter', function( event ) {//Cuando el cursor entra en una imagen,
+     pXini = event.pageX;                          //inicializa la posición
      provX = event.pageX;
      pYini = event.pageY;
      provY = event.pageY;
-     o0 = parseInt($( this ).css("opacity"));
+     o0 = parseInt($( this ).css("opacity"));      //y los valores de opacidad y altura
      op = parseInt($( this ).css("opacity"));
      of = parseInt($( this ).css("opacity"));
      h0 = parseInt($( this ).css("height"));
      hp = parseInt($( this ).css("height"));
      hf = parseInt($( this ).css("height"));
     });
-    $( 'img' ).on('mouseleave', function( event ) {
-     $( this ).css("opacity",o0);
+    $( 'img' ).on('mouseleave', function( event ) { //Al salir el cursor de una imagen
+     $( this ).css("opacity",o0);                   //devuelve su opacidad y tamaño original a ésta
      $( this ).css("height",h0.toString()+"px");
     });
-    $( 'img' ).on('mousemove', function( event ) {
-     var posX = event.pageX;
-     if((right && posX < provX) || (!right && posX > provX)) {
-      pXini = posX;
-      right = !right;
-      op = of;
-     }
-     provX = event.pageX;
-     var chop = 0.1*(posX - pXini)/10;
-     if(op+chop < 0.0) {
-      of = 0.0;
-     }
-     else if(op+chop > 1.0) {
-      of = 1.0;
-     }
-     else {
-      of = op+chop;
-     }
-     $( this ).css("opacity",of);
+    $( 'img' ).on('mousemove', function( event ) {  //Al desplazarse sobre una imágen
+     var posX = event.pageX;                        //Busca la posición actual
      var posY = event.pageY;
+     if((right && posX < provX) || (!right && posX > provX)) {
+      pXini = provX;                                //En caso de cambio de sentido, 
+      right = !right;
+      op = of;                                      //cambia el punto de referencia
+     }
      if((grow && posY < provY) || (!grow && posY > provY)){
-      pYini = posY;
+      pYini = provY;
       grow = !grow;
       hp = hf;
      }
-     provX = event.pageX;
-     var chgr = posY - pYini;
-     if(hp+chgr < 1.0) {
-      hf = 1.0;
-     }
-     else {
-      hf = hp+chgr;
-     }
-     $( this ).css("height",hf.toString()+"px");
+     provX = event.pageX;                           //Nueva posición provisional
+     provY = event.pageY;
+     var chop = 0.1*(posX - pXini)/10;              //Calcula los cambios de opacidad y altura
+     var chgr = pYini - posY;
+     of = escalon(op+chop,0.0,1.0);                 //Calcula la nueva opacidad y altura
+     hf = escalon(hp+chgr,1.0,hp+chgr);
+     $( this ).css("opacity",of);                   //Cambia la opacidad y altura de la figura
+     $( this ).css("height",hf.toString()+"px");    //usando CSS
     });
    });
   </script>
@@ -98,5 +96,6 @@
    <img id="SwordAndSun" src="https://vignette.wikia.nocookie.net/pathfinder/images/7/79/Iomedae_holy_symbol.jpg/revision/latest?cb=20081006220152">
    <br/>
    <label for="SwordAndSun">Iomedae's Holy Symbol, the Sword and Sun</label>
+  </div>
  </body>
 </html>
