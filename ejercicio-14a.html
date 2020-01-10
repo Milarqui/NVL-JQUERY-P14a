@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <meta charset="utf-8">
+   <title>Pruebas de imagen</title>
+   <style>
+    img {
+     height: 300px;
+     margin: 10px;
+     border: 2px groove red;
+    }
+   </style>
+ </head>
+ <body>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script>
+   $( document ).ready(function() {
+    var pXini;
+    var provX;
+    var right = true;
+    var o0;
+    var op;
+    var of;
+    var pYini;
+    var provY;
+    var grow = true;
+    var h0;
+    var hp;
+    var hf;
+    $( 'img' ).css('cursor','crosshair');
+    $( 'img' ).on('mouseenter', function( event ) {
+     pXini = event.pageX;
+     provX = event.pageX;
+     pYini = event.pageY;
+     provY = event.pageY;
+     o0 = parseInt($( this ).css("opacity"));
+     op = parseInt($( this ).css("opacity"));
+     of = parseInt($( this ).css("opacity"));
+     h0 = parseInt($( this ).css("height"));
+     hp = parseInt($( this ).css("height"));
+     hf = parseInt($( this ).css("height"));
+    });
+    $( 'img' ).on('mouseleave', function( event ) {
+     $( this ).css("opacity",o0);
+     $( this ).css("height",h0.toString()+"px");
+    });
+    $( 'img' ).on('mousemove', function( event ) {
+     var posX = event.pageX;
+     if((right && posX > provX) || (!right && posX < provX)) {
+      pXini = posX;
+      right = !right;
+      op = of;
+     }
+     provX = event.pageX;
+     var chop = 0.1*(posX - pXini)/10;
+     if(op+chop < 0.0) {
+      of = 0.0;
+     }
+     else if(op+chop > 1.0) {
+      of = 1.0;
+     }
+     else {
+      of = op+chop;
+     }
+     $( this ).css("opacity",of);
+     var posY = event.pageY;
+     if((grow && posY > provY) || (!grow && posY < provY)){
+      pYini = posY;
+      grow = !grow;
+      hp = hf;
+     }
+     provX = event.pageX;
+     var chgr = posY - pYini;
+     if(hp+chgr < 1.0) {
+      hf = 1.0;
+     }
+     else {
+      hf = hp+chgr;
+     }
+     $( this ).css("height",hf.toString()+"px");
+    });
+   });
+  </script>
+  <div>
+   <p>For the glory of Iomedae!</p>
+   <img id="img1" opacity=0.5 src="https://db4sgowjqfwig.cloudfront.net/campaigns/91980/assets/339206/PZO9414-IomedaeAscendant.jpg?1403199706"> </img>
+   <br/>
+   <img id="img2" src="https://vignette.wikia.nocookie.net/pathfinder/images/7/79/Iomedae_holy_symbol.jpg/revision/latest?cb=20081006220152"> </img>
+   <br/>
+   <img id="img3" src="https://i.imgur.com/WKNMBiH.jpg"> </img>
+   <br/>
+   <img id="img4" src="http://cdn.obsidianportal.com/assets/77376/Iomedae.jpg"> </img>
+  </div>
+ </body>
+</html>
